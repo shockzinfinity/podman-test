@@ -10,6 +10,10 @@ RUN npm i
 
 COPY . .
 
-EXPOSE 8080 3000
+COPY wait-for-it.sh /wait-for-it.sh
 
-CMD ["npm", "run", "start:dev"]
+RUN chmod +x /wait-for-it.sh
+
+EXPOSE 3000
+
+CMD ["/wait-for-it.sh", "db:27017", "--", "npm", "run", "start:dev"]
