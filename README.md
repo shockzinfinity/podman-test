@@ -61,3 +61,14 @@ $ podman run -itd --rm --pod=my-pod -v /home/shockz/nodetest:/usr/src/nodetest -
 $ podman generate kube my-pod >> my-pod.yaml
 $ podman play kube ./my-pod.yaml
 ```
+
+### pod 단위가 아닌 container 단위로 port mapping 시... (rootless 환경)
+
+```bash
+$ podman pod create --name servers --share cgroup,ipc,uts
+$ podman run -d --rm --pod=servers --name mongodb -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=1234 -v mongodb_dev:/data/db mongo
+$ podman run -itd --rm --pod=servers -v /home/shockz/nodetest:/usr/src/nodetest -p 8080:3000 --name nodetest1 nodetest:0.5
+$ podman run -itd --rm --pod=servers -v /home/shockz/nodetest:/usr/src/nodetest -p 8081:3000 --name nodetest2 nodetest:0.5
+$ podman run -itd --rm --pod=servers -v /home/shockz/nodetest:/usr/src/nodetest -p 8082:3000 --name nodetest3 nodetest:0.5
+# 이후 nginx reverse proxy 에서 load balancing...
+```

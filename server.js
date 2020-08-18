@@ -1,7 +1,8 @@
 var mongoose = require('mongoose')
 var express = require('express')
+var uuid = require('uuid')
 
-mongoose.connect('mongodb://root:1234@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false', {
+mongoose.connect('mongodb://root:1234@211.243.42.90:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false', {
   useNewUrlParser: true
 })
 
@@ -18,10 +19,12 @@ const book = require('./models/book')
 
 var app = express()
 
+var id = uuid.v4()
+
 const port = 3000
 
 app.get('/', function(req, res) {
-  res.send('hi there')
+  res.send(`hi there... UUID: ${id}`)
 })
 
 app.get('/newbook', function(req, res){
@@ -52,3 +55,7 @@ app.get('/getbook1', function(req, res) {
 app.listen(port, function() {
   console.log(`앱이 ${port}에서 실행중입니다!!!..................`)
 })
+
+// app.listen(process.env.PORT || 3000, function() {
+//   console.log(`앱이 ${port}에서 실행중입니다!!!..................`)
+// })
